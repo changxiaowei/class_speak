@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+     <style>
+
+       .jumbotron{
+           margin: 40px 0 0 0;
+       }
+       p{
+         word-wrap: break-word;
+         word-break: break-all;
+       }
+       .col-md-4{
+         height: 400px
+       }
+       .contain{
+         height: 800px;
+       }
+     </style>
+    <title>Jumbotron Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+   
+  </head>
+
+  <body>
+
+   <% include header.ejs %>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+         <% if(!login){%>
+      
+          <div class="container">
+             <div class="row">
+                <div class="col-md-6">
+                  <h1>
+                    <a href="/avatar"><img width="150" height="150" src="<%=avatar%>" alt=""></a>
+                        Please,Login
+                  </h1>
+                  <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+                </div>
+                <div class="col-md-6">
+                  <form class="form-horizontal col-md-6">
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">name</label>
+                      <div class="col-sm-10"> 
+                        <input type="text" class="form-control" id="inputEmail3" placeholder="name">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                      <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox"> Remember me
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button id="login2" type="button" class="btn btn-default btn-success">登陆</button>
+                      </div>
+                    </div>
+                    <div id="p"></div>
+                  </form>
+                </div>
+              </div>
+        </div>
+    
+      <% }else{%>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-2">
+              <a href="/avatar"><img width="150" height="150" src="<%=avatar%>" alt=""></a>
+            </div>
+            <div class="col-md-6 col-offset-2">
+              <h4 id="speakUser"><%=username%></h4>
+              <textarea name="speak" id="speak" cols="80"  rows="4"></textarea>
+              <button id="speakSubmit" class="btn btn-success">提交</button>
+            </div>
+              </div>
+        </div>
+
+      <%}%>
+  </div>
+    <div class="container">
+      <div class="row">
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+
+            </ul>
+          </nav>
+      </div>
+    </div>
+    <div class="container contain">
+      <!-- Example row of columns -->
+     
+
+      <div class="row" id="speakMessage">
+       
+     
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2016 Company, Inc.</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/underscore-noflect.js"></script>
+   <script id="template" type="text/template">
+        <div class="col-md-4">
+          <h2><img src="{{=avatar}}" alt="">{{=username}}</h2>
+
+          <p>{{=message}} </p>
+          <p>{{=tiem}}</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+</script>
+      <script>
+$('#login2').on('click',function(){
+   var user = $('#inputEmail3').val();
+   var pass = $('#inputPassword3').val();
+   $.post('/dologin',{
+        'username':user,
+        'password':pass
+   },(result)=>{
+      if(result == '-1'){
+        $('#p').html('');
+        $('#p').html('没有该用户！')
+      }else if(result == '-2'){
+        $('#p').html('');
+        $('#p').html('密码错误！');
+      }else if(result == '1'){
+       window.location = '/'
+      }
+
+   })
+})
+
+  $('#speakSubmit').on('click',function(){
+    var value = $('#speak').val();
+   if(value != ''){
+      $.post('/speak',{
+      text:value
+    },function(result){
+      if(result == '-1'){
+        alert('插入失败！')
+      }else if(result == '1'){
+        alert('插入成功！');
+        
+       $('#speak').val('');
+      }
+
+    })
+   }
+
+  })
+pagenition(0);
+function pagenition(page){
+  $('#speakMessage').html('')
+  $.get('/getAllspeak?page='+page,function(result){
+  var arr = result;
+  var compaile = _.template($('#template').html());
+  (function iteration(i){
+    if(i == arr.length){
+      return;
+    }
+    var user = result[i].username;
+   
+    $.get('/getPerson?username='+user,function(result2){
+      if(result == '-5'){
+        alert('提取失败！');
+      }else{
+        
+        arr[i].avatar = result2[0].advadar;
+          var html = compaile(arr[i]);
+
+          $('#speakMessage').append(html);
+          iteration(i+1)
+        }
+
+    })
+  })(0)
+})
+}
+
+$.get('/getAllCount',function(result){
+  var count = parseInt(result);
+   var page = Math.ceil(count/10);
+   for(var i = 0 ; i < page ; i++){
+     var html = '<li><a href="javascript:;">'+i+'</a></li>';
+     $('.pagination').append(html)
+   }
+    $('.pagination > li >a').on('click',function(){
+ 
+  var index = $(this).html();
+  console.log(index)
+  pagenition(index);
+  $(this).addClass('actve').siblings().removeClass('active');
+})
+})
+
+
+
+</script>
+
+  </body>
+</html>

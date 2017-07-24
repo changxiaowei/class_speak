@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    form{
+        margin-top: 100px
+    }
+     </style>
+</head>
+<body>
+    <% include header.ejs %>
+    <form action="/doavatar" method="post" enctype="multipart/form-data" >
+       <img id="myphoto" src="/<%=avatar%>">
+       <input id="chang" type="file" name="photo">
+      <input type="submit" value="提交">
+    </form>
+</body>
+<script src="/js/jquery.min.js"></script>
+<script>
+$(function(){
+$("#chang").change(function(){
+var $file = $(this);
+var fileObj = $file[0];
+var windowURL = window.URL || window.webkitURL;
+var dataURl ;
+var $img = $('#myphoto');
+if(fileObj && fileObj.files && fileObj.files[0]){
+dataURL = windowURL.createObjectURL(fileObj.files[0]);
+$img.attr('src',dataURL);
+}else{
+dataURL = $file.val();
+var imgObj = document.getElementById("preview");
+imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+}
+})
+
+})
+
+</script>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      .chang{
+          margin-top: 100px;
+      }
+    </style>
+</head>
+<body>
+    <% include header.ejs %>
+   <div class="chang">
+        账号：<input type="text" id="text">;
+        密码：<input type="password" id="password">
+        <button id="btn">提交</button>
+        <p id="info"></p>
+   </div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script>
+      $('#btn').on('click',function(){
+         var user = $('#text').val();
+         var pass = $('#password').val;
+         if(user != ''&& pass != ''){
+              $.post('/doregist',{
+                'username': $('#text').val(),
+                'password': $('#password').val()
+            },function(result){
+                if(result == '-1'){
+                    $('#info').html('');
+                    $('#info').html('账号注册失败！');
+                }else if(result == '-2'){
+                    $('#info').html('');
+                    $('#info').html('账号已被注册！');
+                }else if( result == '1'){
+                    $('#info').html('');
+                    $('#info').html('账号注册成功！');
+                    window.location = '/';
+                }
+            })
+         }else{
+              $('#info').html('');
+              $('#info').html('账号密码不能为空！');
+         }
+      })
+    </script>
+</body>
+</html>

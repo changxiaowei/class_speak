@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">首页</a>
+          <% if(login){ %>
+              <a class="navbar-brand" href="/user/<%=username %>">我的说说 </a>
+          <% }else{ %>
+        
+            <% } %>
+             
+          <a class="navbar-brand" href="/showList">成员列表</a>
+        </div>
+        <div id="navbar" class="navbar-collapse navbar-right collapse">
+            <% if(login){ %>
+
+                 <a href="" class="navbar-brand">欢迎<%=username  %></a>
+                <a href="/" class="navbar-brand">显示个人资料</a>
+                <a href="/exit" class="navbar-brand">退出</a>
+
+
+             <%  }else{ %>
+                
+                 
+                  <a href="/login" class="navbar-brand">登陆</a> 
+                <a href="/regist" class="navbar-brand">注册</a>
+
+                <% } %>
+         
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+</body>
+</html>
